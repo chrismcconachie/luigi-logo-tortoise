@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Luigi Logo Tortoise</title>
+
+  <!-- CodeMirror 5 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ─── Splash screen ────────────────────────────────────────────────── -->
+<div id="splash">
+  <div class="splash-inner">
+    <img id="splash-logo" src="assets/luigi-logo-square.png" alt="Luigi Logo Tortoise">
+    <p class="splash-attr">Made by Mars McConachie &amp; Chris McConachie</p>
+  </div>
+</div>
+
+<!-- ─── Toolbar ──────────────────────────────────────────────────────── -->
+<div id="toolbar">
+  <img class="toolbar-logo" src="assets/luigi-logo-horiz.png" alt="Luigi Logo Tortoise">
+
+  <button id="btn-run"   class="btn" title="Shift+Enter">▶ Run <span class="kbd">⇧↵</span></button>
+  <button id="btn-stop"  class="btn" disabled>■ Stop</button>
+  <button id="btn-clear" class="btn" title="Shift+C">↺ Clear <span class="kbd">⇧C</span></button>
+  <button id="btn-clear-code" class="btn" title="Erase code editor">🗑 Clear Code</button>
+  <button id="btn-print" class="btn" title="Print canvas + code">🖨 Print</button>
+
+  <div class="toolbar-divider"></div>
+
+  <button id="btn-macros" class="btn btn-drawer">🎨 Pre-built</button>
+  <button id="btn-help"   class="btn btn-drawer">📚 Reference</button>
+
+  <div class="speed-wrap">
+    <span>🐢</span>
+    <input id="speed-slider" type="range" min="1" max="10" value="7">
+    <span>🐇</span>
+  </div>
+</div>
+
+<!-- ─── Main ─────────────────────────────────────────────────────────── -->
+<div id="main">
+  <div id="canvas-pane">
+    <canvas id="canvas-drawing"></canvas>
+    <canvas id="canvas-turtle"></canvas>
+  </div>
+
+  <div id="resize-divider" aria-label="Resize divider" role="separator"></div>
+
+  <div id="code-pane">
+    <div id="editor-wrap"></div>
+    <div id="console-wrap">
+      <div id="console-header">
+        <span>Output</span>
+        <button id="console-clear-btn">Clear</button>
+      </div>
+      <div id="console-output"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Footer / attribution ─────────────────────────────────────────── -->
+<div id="footer">
+  Made with 🐢 by Mars McConachie &amp; Chris McConachie
+</div>
+
+<!-- ─── Drawer overlay ───────────────────────────────────────────────── -->
+<div id="drawer-backdrop"></div>
+
+<div id="drawer">
+  <div id="drawer-header">
+    <h2 id="drawer-title">Pre-built</h2>
+    <button id="drawer-close" aria-label="Close">✕</button>
+  </div>
+
+  <div id="drawer-macros" class="drawer-content">
+    <div id="macro-tabs">
+      <button class="macro-tab active" data-cat="shapes">Shapes</button>
+      <button class="macro-tab" data-cat="stars">Stars</button>
+      <button class="macro-tab" data-cat="patterns">Patterns</button>
+      <button class="macro-tab" data-cat="scene">Scene</button>
+      <button class="macro-tab" data-cat="advanced">Advanced</button>
+    </div>
+    <div id="macro-grid"></div>
+    <div id="macro-preview">
+      <div id="macro-preview-label">Preview code</div>
+      <pre id="macro-preview-code">Click a macro to see its code.</pre>
+      <button id="macro-insert-btn" class="btn" disabled>Load into editor</button>
+    </div>
+  </div>
+
+  <div id="drawer-help" class="drawer-content" hidden>
+    <div id="help-search-wrap">
+      <input id="help-search" type="search" placeholder="Search commands…">
+    </div>
+    <div id="help-list"></div>
+    <div id="help-detail"></div>
+  </div>
+</div>
+
+<!-- ─── Print container ──────────────────────────────────────────────── -->
+<div id="print-area" aria-hidden="true"></div>
+
+<!-- CodeMirror JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+
+<!-- App -->
+<script src="js/turtle.js"></script>
+<script src="js/interpreter.js"></script>
+<script src="js/macros.js"></script>
+<script src="js/editor.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
