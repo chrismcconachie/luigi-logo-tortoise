@@ -33,10 +33,36 @@ luigi-logo-tortoise/
 ├── index.html
 ├── assets/                 — logo images
 ├── css/style.css
-└── js/
-    ├── turtle.js           — two-canvas renderer + flood fill
-    ├── interpreter.js      — Logo tokenizer, parser, async-generator evaluator
-    ├── macros.js           — Pre-built program library + drawer module
-    ├── editor.js           — CodeMirror setup, Logo mode, autocomplete, help panel
-    └── app.js              — UI wiring, run/stop/clear, print, divider drag, shortcuts
+├── js/
+│   ├── turtle.js           — two-canvas renderer + flood fill
+│   ├── interpreter.js      — Logo tokenizer, parser, async-generator evaluator
+│   ├── macros.js           — drawer wiring + consumes prebuilts/registry.js
+│   ├── editor.js           — CodeMirror setup, Logo mode, autocomplete, help panel
+│   └── app.js              — UI wiring, run/stop/clear, print, divider drag, shortcuts
+├── prebuilts/
+│   ├── _lib.logo           — shared helpers auto-prepended to every program
+│   ├── index.json          — manifest (categories + per-prebuilt metadata)
+│   ├── registry.js         — generated bundle (committed; loaded via <script>)
+│   ├── shapes/   *.logo    — one file per prebuilt
+│   ├── stars/    *.logo
+│   ├── patterns/ *.logo
+│   ├── scene/    *.logo
+│   └── advanced/ *.logo
+└── tools/
+    └── build-prebuilts.py  — regenerates prebuilts/registry.js
 ```
+
+## Adding a new pre-built
+
+1. Create a new `.logo` file under `prebuilts/<category>/<name>.logo`. Use the helpers in `prebuilts/_lib.logo` (`BOX`, `CIRCLE_AT`, `DISK`, `FBOX`, `CIRC_ARC`) — they're auto-loaded.
+2. Add a metadata entry to the matching category in `prebuilts/index.json`:
+   ```json
+   { "id": "myshape", "label": "My Shape", "icon": "✨", "file": "shapes/myshape.logo" }
+   ```
+3. Regenerate the bundle:
+   ```bash
+   python3 tools/build-prebuilts.py
+   ```
+4. Reload the app — your prebuilt appears in the drawer.
+
+The `prebuilts/registry.js` bundle is checked into git so the app works equally well via `file://` (just open `index.html`) and from any web server.

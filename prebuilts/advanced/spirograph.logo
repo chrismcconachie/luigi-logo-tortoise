@@ -1,0 +1,8 @@
+; 36 rotated squares — classic spirograph pattern
+CS HT
+SETPENWIDTH 1
+REPEAT 36 [
+  SETPC REMAINDER REPCOUNT 16
+  REPEAT 4 [FD 120 RT 90]
+  RT 10
+]

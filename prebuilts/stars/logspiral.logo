@@ -1,0 +1,6 @@
+CS
+MAKE "S 1
+REPEAT 100 [
+  FD :S RT 15
+  MAKE "S :S * 1.05
+]

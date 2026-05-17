@@ -1,0 +1,21 @@
+; Classic random diagonals — like Commodore 64 10 PRINT
+TO TILE :S
+  IFELSE (RANDOM 2) = 0 [
+    ; "/" diagonal
+    PU LT 90 FD :S RT 90 PD
+    RT 45 FD :S * 1.414 LT 45
+    PU FD :S LT 90 FD :S RT 90 PD
+  ] [
+    ; "\\" diagonal
+    RT 45 FD :S * 1.414 LT 45
+    PU FD :S PD
+  ]
+END
+CS HT
+SETPC 5 SETPENWIDTH 1
+MAKE "ROW 0
+PU SETXY -300 -200 SETH 0 PD
+REPEAT 10 [
+  REPEAT 18 [TILE 35]
+  PU SETX -300 SETH 0 FD 35 PD
+]

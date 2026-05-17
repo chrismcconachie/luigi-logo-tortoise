@@ -1,0 +1,66 @@
+; ────────────────────────────────────────────────
+; Modern 3D-isometric house
+; ────────────────────────────────────────────────
+
+TO HOUSE
+  ; ── Front face (light grey) — 200 wide × 130 tall
+  PU SETXY -110 -100 SETH 0 PD
+  SETPENWIDTH 2
+  SETPC 7
+  BOX 200 130
+
+  ; ── Right side face (darker, isometric — depth=80 at 30° angle)
+  SETPC 8
+  PU SETXY 90 -100 PD
+  SETH 60 FD 80
+  SETH 0  FD 130
+  SETH 240 FD 80
+
+  ; ── Flat roof (white parallelogram on top)
+  SETPC 15
+  PU SETXY -110 30 PD
+  SETH 60  FD 80
+  SETH 90  FD 200
+  SETH 240 FD 80
+  SETH 270 FD 200
+
+  ; ── Roof front edge highlight
+  SETPENWIDTH 3
+  SETPC 0
+  PU SETXY -110 30 SETH 90 PD
+  FD 200
+
+  ; ── Door (brown, centered)
+  SETPENWIDTH 2
+  SETPC 4
+  PU SETXY -20 -100 SETH 0 PD
+  BOX 40 65
+  ; Door knob
+  SETPC 14
+  PU SETXY 12 -72 SETH 0 PD
+  REPEAT 12 [FD 1 RT 30]
+
+  ; ── Two windows (blue with frames)
+  SETPC 9
+  SETPENWIDTH 2
+  PU SETXY -85 -25 SETH 0 PD
+  BOX 45 40
+  PU SETXY 40 -25 SETH 0 PD
+  BOX 45 40
+  ; Window cross-bars
+  SETPC 7
+  SETPENWIDTH 1
+  PU SETXY -62 -25 SETH 0 PD FD 40
+  PU SETXY -85 -5  SETH 90 PD FD 45
+  PU SETXY 62 -25 SETH 0 PD FD 40
+  PU SETXY 40 -5  SETH 90 PD FD 45
+
+  ; ── Chimney on the roof
+  SETPC 4
+  SETPENWIDTH 2
+  PU SETXY 30 75 SETH 0 PD
+  BOX 18 35
+END
+
+CS HT
+HOUSE

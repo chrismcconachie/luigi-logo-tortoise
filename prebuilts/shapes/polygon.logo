@@ -1,0 +1,6 @@
+; Regular polygon with N sides
+TO POLYGON :N :SIZE
+  REPEAT :N [FD :SIZE RT 360 / :N]
+END
+CS
+POLYGON 12 60

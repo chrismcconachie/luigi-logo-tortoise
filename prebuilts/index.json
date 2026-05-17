@@ -1,0 +1,281 @@
+{
+  "version": 1,
+  "categories": [
+    {
+      "id": "shapes",
+      "label": "Shapes",
+      "prebuilts": [
+        {
+          "id": "square",
+          "label": "Square",
+          "icon": "⬛",
+          "file": "shapes/square.logo"
+        },
+        {
+          "id": "triangle",
+          "label": "Triangle",
+          "icon": "🔺",
+          "file": "shapes/triangle.logo"
+        },
+        {
+          "id": "circle",
+          "label": "Circle",
+          "icon": "⭕",
+          "file": "shapes/circle.logo"
+        },
+        {
+          "id": "rectangle",
+          "label": "Rectangle",
+          "icon": "▬",
+          "file": "shapes/rectangle.logo"
+        },
+        {
+          "id": "pentagon",
+          "label": "Pentagon",
+          "icon": "⬠",
+          "file": "shapes/pentagon.logo"
+        },
+        {
+          "id": "hexagon",
+          "label": "Hexagon",
+          "icon": "⬡",
+          "file": "shapes/hexagon.logo"
+        },
+        {
+          "id": "octagon",
+          "label": "Octagon",
+          "icon": "🛑",
+          "file": "shapes/octagon.logo"
+        },
+        {
+          "id": "polygon",
+          "label": "N-gon",
+          "icon": "🔷",
+          "file": "shapes/polygon.logo"
+        }
+      ]
+    },
+    {
+      "id": "stars",
+      "label": "Stars & Spirals",
+      "prebuilts": [
+        {
+          "id": "star5",
+          "label": "5-Point Star",
+          "icon": "⭐",
+          "file": "stars/star5.logo"
+        },
+        {
+          "id": "star6",
+          "label": "6-Point Star",
+          "icon": "✡",
+          "file": "stars/star6.logo"
+        },
+        {
+          "id": "star8",
+          "label": "8-Point Star",
+          "icon": "✴",
+          "file": "stars/star8.logo"
+        },
+        {
+          "id": "sqspiral",
+          "label": "Square Spiral",
+          "icon": "🌀",
+          "file": "stars/sqspiral.logo"
+        },
+        {
+          "id": "trispiral",
+          "label": "Triangle Spiral",
+          "icon": "🔁",
+          "file": "stars/trispiral.logo"
+        },
+        {
+          "id": "logspiral",
+          "label": "Log Spiral",
+          "icon": "🌊",
+          "file": "stars/logspiral.logo"
+        },
+        {
+          "id": "rainbow",
+          "label": "Rainbow Burst",
+          "icon": "🌈",
+          "file": "stars/rainbow.logo"
+        },
+        {
+          "id": "rosette",
+          "label": "Rosette",
+          "icon": "🏵",
+          "file": "stars/rosette.logo"
+        }
+      ]
+    },
+    {
+      "id": "patterns",
+      "label": "Patterns",
+      "prebuilts": [
+        {
+          "id": "snowflake",
+          "label": "Snowflake",
+          "icon": "❄️",
+          "file": "patterns/snowflake.logo"
+        },
+        {
+          "id": "tree",
+          "label": "Fractal Tree",
+          "icon": "🌲",
+          "file": "patterns/tree.logo"
+        },
+        {
+          "id": "kochflake",
+          "label": "Koch Snowflake",
+          "icon": "🔷",
+          "file": "patterns/kochflake.logo"
+        },
+        {
+          "id": "sierpinski",
+          "label": "Sierpinski",
+          "icon": "🔺",
+          "file": "patterns/sierpinski.logo"
+        },
+        {
+          "id": "dragon",
+          "label": "Dragon Curve",
+          "icon": "🐉",
+          "file": "patterns/dragon.logo"
+        },
+        {
+          "id": "hilbert",
+          "label": "Hilbert Curve",
+          "icon": "⬛",
+          "file": "patterns/hilbert.logo"
+        },
+        {
+          "id": "spiroflower",
+          "label": "Spiroflower",
+          "icon": "🌸",
+          "file": "patterns/spiroflower.logo"
+        },
+        {
+          "id": "mandala",
+          "label": "Mandala",
+          "icon": "🕸",
+          "file": "patterns/mandala.logo"
+        }
+      ]
+    },
+    {
+      "id": "scene",
+      "label": "Scene",
+      "prebuilts": [
+        {
+          "id": "house",
+          "label": "Modern 3D House",
+          "icon": "🏠",
+          "file": "scene/house.logo"
+        },
+        {
+          "id": "sun",
+          "label": "Sun",
+          "icon": "☀️",
+          "file": "scene/sun.logo"
+        },
+        {
+          "id": "car",
+          "label": "Car",
+          "icon": "🚗",
+          "file": "scene/car.logo"
+        },
+        {
+          "id": "f1car",
+          "label": "F1 Race Car",
+          "icon": "🏎️",
+          "file": "scene/f1car.logo"
+        },
+        {
+          "id": "stickfigure",
+          "label": "Stick Figure",
+          "icon": "🧍",
+          "file": "scene/stickfigure.logo"
+        },
+        {
+          "id": "mountain",
+          "label": "Mountains",
+          "icon": "🏔",
+          "file": "scene/mountain.logo"
+        },
+        {
+          "id": "flower",
+          "label": "Flower",
+          "icon": "🌷",
+          "file": "scene/flower.logo"
+        }
+      ]
+    },
+    {
+      "id": "advanced",
+      "label": "Advanced",
+      "prebuilts": [
+        {
+          "id": "colorwheel",
+          "label": "Color Wheel",
+          "icon": "🎨",
+          "file": "advanced/colorwheel.logo"
+        },
+        {
+          "id": "spirograph",
+          "label": "Spirograph",
+          "icon": "🌀",
+          "file": "advanced/spirograph.logo"
+        },
+        {
+          "id": "pinwheel",
+          "label": "Pinwheel",
+          "icon": "🌬",
+          "file": "advanced/pinwheel.logo"
+        },
+        {
+          "id": "heart",
+          "label": "Heart",
+          "icon": "❤️",
+          "file": "advanced/heart.logo"
+        },
+        {
+          "id": "cube",
+          "label": "3D Cube",
+          "icon": "🧊",
+          "file": "advanced/cube.logo"
+        },
+        {
+          "id": "web",
+          "label": "Spider Web",
+          "icon": "🕷",
+          "file": "advanced/web.logo"
+        },
+        {
+          "id": "fern",
+          "label": "Fractal Fern",
+          "icon": "🌿",
+          "file": "advanced/fern.logo"
+        },
+        {
+          "id": "galaxy",
+          "label": "Spiral Galaxy",
+          "icon": "🌌",
+          "file": "advanced/galaxy.logo"
+        },
+        {
+          "id": "tilemaze",
+          "label": "10-PRINT Maze",
+          "icon": "🔳",
+          "file": "advanced/tilemaze.logo"
+        },
+        {
+          "id": "wave",
+          "label": "Wave Pattern",
+          "icon": "🌊",
+          "file": "advanced/wave.logo"
+        }
+      ]
+    }
+  ]
+}

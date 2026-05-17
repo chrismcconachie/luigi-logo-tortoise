@@ -1,0 +1,14 @@
+; Multi-arm spiral galaxy
+CS HT
+SETBG 0
+SETPENWIDTH 1
+REPEAT 4 [
+  SETPC REMAINDER REPCOUNT 16 + 9
+  PU HOME PD
+  MAKE "R 1
+  REPEAT 200 [
+    FD :R / 4 RT 7
+    MAKE "R :R + 0.5
+  ]
+  PU HOME RT REPCOUNT * 90 PD
+]

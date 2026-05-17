@@ -1,0 +1,131 @@
+; ═══════════════════════════════════════════════════
+; FORMULA 1 RACE CAR — detailed side view
+; ═══════════════════════════════════════════════════
+
+; F1 wheel
+TO F1_WHEEL :CX :CY :R
+  DISK :CX :CY :R 0
+  DISK :CX :CY :R * 0.6 8
+  DISK :CX :CY :R * 0.15 6
+  SETPC 7 SETPENWIDTH 2
+  PU SETXY :CX :CY SETH 0 PD
+  REPEAT 5 [
+    FD :R * 0.55 BK :R * 0.55 RT 72
+  ]
+END
+
+TO F1
+  CS HT
+
+  ; ───── Main body silhouette (filled red) ─────
+  SETPC 4 SETPENWIDTH 3
+  PU SETXY -290 -10 PD
+  SETXY -290 -2
+  SETXY -180 2
+  SETXY -100 12
+  SETXY -55 30
+  SETXY 55 30
+  SETXY 140 22
+  SETXY 210 10
+  SETXY 210 -10
+  SETXY -290 -10
+  PU SETXY 0 0 PD
+  SETPC 4
+  FILL
+
+  ; ───── Engine air-intake (above driver) ─────
+  SETPC 5 SETPENWIDTH 2
+  PU SETXY 55 30 PD
+  SETXY 70 45
+  SETXY 130 40
+  SETXY 140 22
+  PU SETXY 100 32 PD
+  SETPC 5
+  FILL
+
+  ; ───── Cockpit opening (dark recess) ─────
+  SETPC 0 SETPENWIDTH 1
+  PU SETXY -40 22 SETH 0 PD
+  BOX 90 8
+  PU SETXY 0 26 PD
+  SETPC 0
+  FILL
+
+  ; ───── Driver helmet ─────
+  DISK -10 38 10 14
+  SETPC 0 SETPENWIDTH 3
+  PU SETXY -18 40 PD
+  SETXY -2 40
+
+  ; ───── Halo (cockpit safety ring) ─────
+  SETPC 0 SETPENWIDTH 5
+  PU SETXY -55 30 PD
+  SETXY -50 55
+  SETXY 30 55
+  SETXY 50 30
+  PU SETXY -22 55 PD
+  SETXY -22 32
+
+  ; ───── Front wing (3 elements + endplate) ─────
+  SETPC 4
+  PU SETXY -310 -22 SETH 0 PD
+  FBOX 90 5 4
+  PU SETXY -305 -32 SETH 0 PD
+  FBOX 85 4 4
+  PU SETXY -300 -42 SETH 0 PD
+  FBOX 85 4 4
+  PU SETXY -310 -46 SETH 0 PD
+  FBOX 7 30 5
+  SETPC 4 SETPENWIDTH 2
+  PU SETXY -250 -22 PD
+  SETXY -250 -42
+
+  ; ───── Rear wing ─────
+  PU SETXY 205 10 SETH 0 PD
+  FBOX 10 60 4
+  PU SETXY 180 65 SETH 0 PD
+  FBOX 45 6 4
+  PU SETXY 185 52 SETH 0 PD
+  FBOX 38 5 4
+  PU SETXY 192 30 SETH 0 PD
+  FBOX 28 4 4
+  SETPC 4 SETPENWIDTH 2
+  PU SETXY 200 30 PD
+  SETXY 200 52
+
+  ; ───── Side pod air intake ─────
+  PU SETXY -50 -2 SETH 0 PD
+  FBOX 30 14 0
+  SETPC 8 SETPENWIDTH 1
+  PU SETXY -45 4 PD SETXY -25 4
+  PU SETXY -45 8 PD SETXY -25 8
+
+  ; ───── Racing stripes ─────
+  SETPC 15 SETPENWIDTH 5
+  PU SETXY 0 4 PD
+  SETXY 130 4
+  SETPC 14 SETPENWIDTH 2
+  PU SETXY 0 -1 PD
+  SETXY 130 -1
+
+  ; ───── Side mirror ─────
+  PU SETXY -45 26 SETH 0 PD
+  FBOX 13 7 0
+
+  ; ───── Exhaust pipe ─────
+  SETPC 8 SETPENWIDTH 6
+  PU SETXY 200 -2 SETH 90 PD
+  FD 18
+  DISK 218 -2 4 6
+
+  ; ───── Floor plank ─────
+  SETPC 0 SETPENWIDTH 4
+  PU SETXY -210 -10 PD
+  SETXY 210 -10
+
+  ; ───── Wheels (drawn last) ─────
+  F1_WHEEL -180 -25 30
+  F1_WHEEL 170 -25 34
+END
+
+F1

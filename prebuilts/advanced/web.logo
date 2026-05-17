@@ -1,0 +1,13 @@
+TO RADIAL :LEN
+  FD :LEN BK :LEN
+END
+CS HT
+SETPC 7 SETPENWIDTH 1
+; 12 radial spokes
+REPEAT 12 [RADIAL 200 RT 30]
+; Spiral webbing
+MAKE "R 20
+REPEAT 60 [
+  FD :R / 6 RT 6
+  MAKE "R :R + 3
+]

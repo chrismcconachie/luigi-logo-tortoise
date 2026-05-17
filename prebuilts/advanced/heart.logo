@@ -1,0 +1,12 @@
+; Heart shape: 2 semicircle bumps + V at bottom
+CS HT
+SETPC 4 SETPENWIDTH 3
+PU SETXY -80 -40 SETH 45 PD
+; Left side up
+FD 100
+; Left bump (semicircle)
+REPEAT 180 [FD 1.2 RT 1]
+; Right bump (semicircle)
+REPEAT 180 [FD 1.2 RT 1]
+; Right side down to bottom point
+FD 100

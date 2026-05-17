@@ -1,0 +1,41 @@
+; ═══════════════════════════════════════════════════════════════
+; Shared helper procedures — auto-loaded before every program
+;
+; These are always available to user code AND every prebuilt:
+;   BOX :W :H              — draw rectangle going up then right
+;   CIRCLE_AT :CX :CY :R   — outline circle centered at (cx,cy)
+;   DISK :CX :CY :R :C     — filled disk in color :C
+;   FBOX :W :H :C          — filled box in color :C
+;   CIRC_ARC :R :STEPS :DEG — partial arc starting at current pos
+; ═══════════════════════════════════════════════════════════════
+
+TO BOX :W :H
+  REPEAT 2 [FD :H RT 90 FD :W RT 90]
+END
+
+TO CIRCLE_AT :CX :CY :R
+  PU SETXY :CX :CY + :R SETH 90 PD
+  REPEAT 36 [FD :R * 0.1745 RT 10]
+END
+
+TO DISK :CX :CY :R :C
+  SETPC :C SETPENWIDTH 1
+  CIRCLE_AT :CX :CY :R
+  PU SETXY :CX :CY PD
+  FILL
+END
+
+TO FBOX :W :H :C
+  SETPC :C SETPENWIDTH 1
+  BOX :W :H
+  PU FD 1 RT 90 FD 1 LT 90 PD
+  FILL
+  PU BK 1 LT 90 FD 1 RT 90 PD
+END
+
+TO CIRC_ARC :R :STEPS :TOTAL_DEG
+  REPEAT :STEPS [
+    FD :R * 3.14159 * :TOTAL_DEG / 180 / :STEPS
+    RT :TOTAL_DEG / :STEPS
+  ]
+END

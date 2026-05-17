@@ -1,0 +1,20 @@
+; Isometric-looking cube using offset squares
+TO SQ :S
+  REPEAT 4 [FD :S RT 90]
+END
+CS HT
+SETPENWIDTH 2
+SETPC 12
+; Front face
+PU SETXY -50 -50 SETH 0 PD
+SQ 100
+; Back face (offset)
+PU SETXY 0 0 SETH 0 PD
+SETPC 9
+SQ 100
+; Connecting lines
+SETPC 14
+PU SETXY -50 -50 PD SETXY 0 0
+PU SETXY 50 -50 PD SETXY 100 0
+PU SETXY 50 50 PD SETXY 100 100
+PU SETXY -50 50 PD SETXY 0 100

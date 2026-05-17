@@ -62,9 +62,15 @@ const App = (() => {
     Turtle.state.shouldStop = false;
     Turtle.state.callDepth  = 0;
 
+    // Prepend the shared helper library so prebuilts and user code can
+    // always call BOX / CIRCLE_AT / DISK / FBOX / CIRC_ARC without
+    // redefining them locally.
+    const lib = (typeof Macros !== 'undefined' && Macros.SHARED_LIB) ? Macros.SHARED_LIB : '';
+    const fullSrc = lib ? lib + '\n\n' + src : src;
+
     let gen;
     try {
-      gen = Logo.run(src);
+      gen = Logo.run(fullSrc);
     } catch (e) {
       printError(e.logoMsg || e.message);
       return;

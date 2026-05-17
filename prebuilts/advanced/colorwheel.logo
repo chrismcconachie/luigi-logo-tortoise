@@ -1,0 +1,8 @@
+; All 16 Logo colors arranged in a wheel
+CS HT
+SETPENWIDTH 6
+REPEAT 16 [
+  SETPC REPCOUNT - 1
+  FD 120 BK 120
+  RT 22.5
+]

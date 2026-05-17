@@ -1,0 +1,6 @@
+CS
+MAKE "S 5
+REPEAT 80 [
+  FD :S RT 90
+  MAKE "S :S + 3
+]

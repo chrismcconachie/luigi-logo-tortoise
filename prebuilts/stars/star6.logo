@@ -1,0 +1,8 @@
+TO STAR6 :SIZE
+  REPEAT 6 [
+    FD :SIZE RT 60
+    FD :SIZE RT 120
+  ]
+END
+CS
+STAR6 100

@@ -1,0 +1,14 @@
+TO PETAL
+  REPEAT 2 [
+    REPEAT 60 [FD 2 RT 3]
+    RT 60
+  ]
+END
+CS HT
+MAKE "C 1
+REPEAT 18 [
+  SETPC REMAINDER :C 16
+  PETAL
+  RT 20
+  MAKE "C :C + 1
+]
