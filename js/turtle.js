@@ -178,6 +178,24 @@ const Turtle = (() => {
   function setPenColor(color) { state.penColor = color; }
   function setPenWidth(w)     { state.penWidth = Math.max(0.5, w); }
 
+  // Draws `text` on the drawing canvas at the turtle's current position,
+  // rotated to match the turtle's heading.  Pen color used for text.
+  function label(text) {
+    if (text === undefined || text === null) return;
+    const str = Array.isArray(text) ? text.join(' ') : String(text);
+    const { cx, cy } = toCanvas(state.x, state.y);
+    const angle = state.heading * Math.PI / 180;
+    drawingCtx.save();
+    drawingCtx.translate(cx, cy);
+    drawingCtx.rotate(angle);
+    drawingCtx.fillStyle = state.penColor;
+    drawingCtx.font = `${Math.max(12, state.penWidth * 8)}px "Fira Code", monospace`;
+    drawingCtx.textBaseline = 'alphabetic';
+    drawingCtx.textAlign = 'left';
+    drawingCtx.fillText(str, 4, -4);
+    drawingCtx.restore();
+  }
+
   function fill() {
     const { cx, cy } = toCanvas(state.x, state.y);
     const sx = Math.round(cx), sy = Math.round(cy);
@@ -251,7 +269,7 @@ const Turtle = (() => {
     showTurtle, hideTurtle,
     clearScreen, setBackground,
     setPenColor, setPenWidth,
-    fill, colorFromValue,
+    fill, label, colorFromValue,
     getDrawingCanvas, getDimensions, syncCanvasSize,
   };
 })();

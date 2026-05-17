@@ -18,7 +18,7 @@ const Editor = (() => {
     'CLEARSCREEN','CS','CLEARTEXT','CT',
     'REPEAT','IF','IFELSE','TO','END',
     'MAKE','LOCAL','OUTPUT','STOP','WAIT',
-    'PRINT','SHOW','TYPE',
+    'PRINT','SHOW','TYPE','LABEL','TT',
     'SQRT','ABS','INT','ROUND','SIN','COS','TAN','ARCTAN','ARCSIN','ARCCOS',
     'RANDOM','REMAINDER','MODULO','POWER','MINUS',
     'AND','OR','NOT',
@@ -129,6 +129,8 @@ const Editor = (() => {
     { text:'WAIT',     hint:'WAIT ticks',             desc:'Pause (1 tick ≈ 1/60 second)' },
     { text:'PRINT',    hint:'PRINT value',            desc:'Print value to console' },
     { text:'SHOW',     hint:'SHOW value',             desc:'Print value (with brackets for lists)' },
+    { text:'LABEL',    hint:'LABEL [text...]',        desc:'Draw text on the canvas at turtle position' },
+    { text:'TT',       hint:'TT [text...]',           desc:'Alias for LABEL — type on canvas' },
     { text:'SQRT',     hint:'SQRT number',            desc:'Square root' },
     { text:'ABS',      hint:'ABS number',             desc:'Absolute value' },
     { text:'INT',      hint:'INT number',             desc:'Truncate to integer' },
@@ -391,6 +393,43 @@ const Editor = (() => {
 
     // Apply custom color classes
     cm.getWrapperElement().classList.add('cm-s-logo');
+
+    // ── Fast backspace ─────────────────────────────────────────────
+    // The browser's default key-repeat rate is too slow for editing
+    // long lines.  When the user holds Backspace, we kick off our own
+    // 25ms timer after a 250ms initial delay.
+    (function fastBackspace() {
+      let timer = null;
+      const cmEl = cm.getWrapperElement();
+
+      function startRepeat() {
+        if (timer) return;
+        // Initial 250ms delay before fast-repeat kicks in (so a brief
+        // tap still feels normal).
+        timer = setTimeout(function repeat() {
+          cm.execCommand('delCharBefore');
+          timer = setTimeout(repeat, 25); // ~40 deletions per second
+        }, 250);
+      }
+      function stopRepeat() {
+        if (timer) { clearTimeout(timer); timer = null; }
+      }
+
+      cmEl.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !e.metaKey && !e.ctrlKey && !e.altKey) {
+          // Don't interfere with the FIRST delete (CodeMirror handles it)
+          // — only start our repeater on the OS-generated repeat events.
+          if (e.repeat) {
+            e.preventDefault();
+            startRepeat();
+          }
+        }
+      });
+      cmEl.addEventListener('keyup', (e) => {
+        if (e.key === 'Backspace') stopRepeat();
+      });
+      cmEl.addEventListener('blur', stopRepeat, true);
+    })();
 
     // Trigger autocomplete on keystrokes
     cm.on('inputRead', (instance, change) => {

@@ -123,6 +123,7 @@ const Logo = (() => {
     SHOWTURTLE:0,ST:0,HIDETURTLE:0,HT:0,
     FILL:0,
     PRINT:1,SHOW:1,TYPE:1,
+    LABEL:1,TT:1,
     WAIT:1,STOP:0,OUTPUT:1,
     MAKE:2,LOCAL:1,
     IF:-1,IFELSE:3,     // IF handled specially
@@ -285,9 +286,21 @@ const Logo = (() => {
         if (peek().type === TT.NEWLINE) { advance(); continue; }
         if (peek().type === TT.LBRAK) {
           items.push(parseListLiteral());
-        } else {
-          items.push(parseExpr());
+          continue;
         }
+        // Inside a list literal, every word/number is a *literal value*.
+        // We must NOT call parseExpr here — that would treat words like
+        // `LIST`, `FIRST`, etc. as built-in function calls and consume
+        // following items as their arguments.  Logo lists are pure data.
+        const tok = advance();
+        if (tok.type === TT.NUMBER) {
+          items.push({ type:'NumberLit', value: tok.value, line: tok.line });
+        } else if (tok.type === TT.WORD) {
+          let v = tok.value;
+          if (v.startsWith('"') || v.startsWith(':')) v = v.slice(1);
+          items.push({ type:'StringLit', value: v, line: tok.line });
+        }
+        // Other token types are silently skipped (e.g. stray operators)
       }
       if (peek().type === TT.RBRAK) advance();
       return { type:'ListLit', items, line:t.line };
@@ -310,8 +323,11 @@ const Logo = (() => {
     function parseCall(name, arity, tok) {
       const args = [];
       for (let i = 0; i < arity; i++) {
-        if (peek().type === TT.LBRAK) args.push(parseBlock());
-        else args.push(parseExpr());
+        // `[...]` in an argument slot is always a LIST literal here.
+        // REPEAT / IF / IFELSE are handled by their own parser branches
+        // above (which explicitly call parseBlock), so we never reach
+        // this point needing to parse a code block.
+        args.push(parseExpr());
       }
       return { type:'Call', name, args, line:tok.line };
     }
@@ -629,6 +645,14 @@ const Logo = (() => {
       case 'TYPE':
         App.printInline(logoToString(args[0])); break;
 
+      // Draw text on the canvas at turtle's current position.
+      // Accepts either a quoted word (`TT "hello`) or a list of words
+      // (`TT [hello world]`).  Lists are joined with spaces, no brackets.
+      case 'LABEL': case 'TT':
+        Turtle.label(labelText(args[0]));
+        yield { type:'DRAW' };
+        break;
+
       // Wait
       case 'WAIT':
         yield { type:'WAIT', ms: +args[0] }; break;
@@ -790,6 +814,18 @@ const Logo = (() => {
 
   function logoToString(val) {
     if (Array.isArray(val)) return '[' + val.map(logoToString).join(' ') + ']';
+    if (val === true)  return 'TRUE';
+    if (val === false) return 'FALSE';
+    if (val === undefined || val === null) return '';
+    return String(val);
+  }
+
+  // labelText is like logoToString, but for canvas LABEL / TT output:
+  // arrays are joined with spaces and no surrounding brackets — so that
+  //   TT [type something here]
+  // renders as "type something here" on the canvas.
+  function labelText(val) {
+    if (Array.isArray(val)) return val.map(labelText).join(' ');
     if (val === true)  return 'TRUE';
     if (val === false) return 'FALSE';
     if (val === undefined || val === null) return '';

@@ -52,12 +52,114 @@
           "label": "N-gon",
           "icon": "🔷",
           "file": "shapes/polygon.logo"
+        },
+        {
+          "id": "heart",
+          "label": "Heart",
+          "icon": "❤️",
+          "file": "advanced/heart.logo"
+        },
+        {
+          "id": "cube",
+          "label": "3D Cube",
+          "icon": "🧊",
+          "file": "advanced/cube.logo"
         }
       ]
     },
     {
-      "id": "stars",
-      "label": "Stars & Spirals",
+      "id": "animals",
+      "label": "Animals",
+      "prebuilts": [
+        {
+          "id": "tuatara",
+          "label": "Tuatara",
+          "icon": "🦎",
+          "file": "scene/tuatara.logo"
+        },
+        {
+          "id": "stickfigure",
+          "label": "Stick Figure",
+          "icon": "🧍",
+          "file": "scene/stickfigure.logo"
+        }
+      ]
+    },
+    {
+      "id": "nature",
+      "label": "Nature",
+      "prebuilts": [
+        {
+          "id": "flower",
+          "label": "Flower",
+          "icon": "🌷",
+          "file": "scene/flower.logo"
+        },
+        {
+          "id": "tree",
+          "label": "Fractal Tree",
+          "icon": "🌲",
+          "file": "patterns/tree.logo"
+        },
+        {
+          "id": "fern",
+          "label": "Fractal Fern",
+          "icon": "🌿",
+          "file": "advanced/fern.logo"
+        },
+        {
+          "id": "snowflake",
+          "label": "Snowflake",
+          "icon": "❄️",
+          "file": "patterns/snowflake.logo"
+        },
+        {
+          "id": "kochflake",
+          "label": "Koch Snowflake",
+          "icon": "🔷",
+          "file": "patterns/kochflake.logo"
+        },
+        {
+          "id": "mountain",
+          "label": "Mountains",
+          "icon": "🏔",
+          "file": "scene/mountain.logo"
+        },
+        {
+          "id": "sun",
+          "label": "Sun",
+          "icon": "☀️",
+          "file": "scene/sun.logo"
+        }
+      ]
+    },
+    {
+      "id": "things",
+      "label": "Things",
+      "prebuilts": [
+        {
+          "id": "house",
+          "label": "Modern 3D House",
+          "icon": "🏠",
+          "file": "scene/house.logo"
+        },
+        {
+          "id": "car",
+          "label": "Car",
+          "icon": "🚗",
+          "file": "scene/car.logo"
+        },
+        {
+          "id": "mclaren-f1",
+          "label": "F1 Race Car",
+          "icon": "🏁",
+          "file": "scene/mclaren-f1.logo"
+        }
+      ]
+    },
+    {
+      "id": "generated",
+      "label": "Generated",
       "prebuilts": [
         {
           "id": "star5",
@@ -106,30 +208,6 @@
           "label": "Rosette",
           "icon": "🏵",
           "file": "stars/rosette.logo"
-        }
-      ]
-    },
-    {
-      "id": "patterns",
-      "label": "Patterns",
-      "prebuilts": [
-        {
-          "id": "snowflake",
-          "label": "Snowflake",
-          "icon": "❄️",
-          "file": "patterns/snowflake.logo"
-        },
-        {
-          "id": "tree",
-          "label": "Fractal Tree",
-          "icon": "🌲",
-          "file": "patterns/tree.logo"
-        },
-        {
-          "id": "kochflake",
-          "label": "Koch Snowflake",
-          "icon": "🔷",
-          "file": "patterns/kochflake.logo"
         },
         {
           "id": "sierpinski",
@@ -160,61 +238,7 @@
           "label": "Mandala",
           "icon": "🕸",
           "file": "patterns/mandala.logo"
-        }
-      ]
-    },
-    {
-      "id": "scene",
-      "label": "Scene",
-      "prebuilts": [
-        {
-          "id": "house",
-          "label": "Modern 3D House",
-          "icon": "🏠",
-          "file": "scene/house.logo"
         },
-        {
-          "id": "sun",
-          "label": "Sun",
-          "icon": "☀️",
-          "file": "scene/sun.logo"
-        },
-        {
-          "id": "car",
-          "label": "Car",
-          "icon": "🚗",
-          "file": "scene/car.logo"
-        },
-        {
-          "id": "f1car",
-          "label": "F1 Race Car",
-          "icon": "🏎️",
-          "file": "scene/f1car.logo"
-        },
-        {
-          "id": "stickfigure",
-          "label": "Stick Figure",
-          "icon": "🧍",
-          "file": "scene/stickfigure.logo"
-        },
-        {
-          "id": "mountain",
-          "label": "Mountains",
-          "icon": "🏔",
-          "file": "scene/mountain.logo"
-        },
-        {
-          "id": "flower",
-          "label": "Flower",
-          "icon": "🌷",
-          "file": "scene/flower.logo"
-        }
-      ]
-    },
-    {
-      "id": "advanced",
-      "label": "Advanced",
-      "prebuilts": [
         {
           "id": "colorwheel",
           "label": "Color Wheel",
@@ -234,28 +258,10 @@
           "file": "advanced/pinwheel.logo"
         },
         {
-          "id": "heart",
-          "label": "Heart",
-          "icon": "❤️",
-          "file": "advanced/heart.logo"
-        },
-        {
-          "id": "cube",
-          "label": "3D Cube",
-          "icon": "🧊",
-          "file": "advanced/cube.logo"
-        },
-        {
           "id": "web",
           "label": "Spider Web",
           "icon": "🕷",
           "file": "advanced/web.logo"
-        },
-        {
-          "id": "fern",
-          "label": "Fractal Fern",
-          "icon": "🌿",
-          "file": "advanced/fern.logo"
         },
         {
           "id": "galaxy",

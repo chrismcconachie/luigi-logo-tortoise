@@ -125,22 +125,38 @@ const App = (() => {
 
   // ── Print ──────────────────────────────────────────────────────────
   function printDocument() {
-    const canvas = Turtle.getDrawingCanvas();
-    const dataURL = canvas.toDataURL('image/png');
+    const srcCanvas = Turtle.getDrawingCanvas();
+
+    // Composite the drawing onto a NEW canvas with an explicit white
+    // background.  Without this step any transparent/alpha pixels would
+    // print as black bands.
+    const printCanvas = document.createElement('canvas');
+    printCanvas.width = srcCanvas.width;
+    printCanvas.height = srcCanvas.height;
+    const pctx = printCanvas.getContext('2d');
+    pctx.fillStyle = '#ffffff';
+    pctx.fillRect(0, 0, printCanvas.width, printCanvas.height);
+    pctx.drawImage(srcCanvas, 0, 0);
+    const dataURL = printCanvas.toDataURL('image/png');
+
     const code = Editor.cm ? Editor.cm.getValue() : '';
+    const stamp = new Date().toLocaleString();
 
     const area = document.getElementById('print-area');
     area.innerHTML = `
-      <h1>🐢 Luigi Logo Tortoise</h1>
-      <p style="margin-bottom:12px; color:#555; font-size:12px;">
-        Printed ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}
-      </p>
-      <img class="print-image" src="${dataURL}" alt="Canvas drawing">
-      <h2>Code</h2>
+      <header class="print-header">
+        <h1>🐢 Luigi Logo Tortoise</h1>
+        <p class="print-stamp">Printed ${escapeHtml(stamp)}</p>
+      </header>
+      <figure class="print-figure">
+        <img class="print-image" src="${dataURL}" alt="Canvas drawing">
+      </figure>
+      <h2 class="print-section-heading">Code</h2>
       <pre class="print-code">${escapeHtml(code)}</pre>
-      <div class="print-footer">Made with 🐢 by Mars McConachie &amp; Chris McConachie</div>
+      <footer class="print-footer">Made with 🐢 by Mars McConachie &amp; Chris McConachie</footer>
     `;
-    window.print();
+    // Give the <img> a tick to decode the dataURL before opening the dialog.
+    setTimeout(() => window.print(), 50);
   }
 
   function escapeHtml(str) {

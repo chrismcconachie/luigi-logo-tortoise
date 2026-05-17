@@ -54,6 +54,45 @@ luigi-logo-tortoise/
 
 ## Adding a new pre-built
 
+### Option A — Auto-trace from an image (recommended for complex shapes)
+
+Use `tools/image-to-logo.py` to vectorize any silhouette image into accurate Logo code via [potrace](http://potrace.sourceforge.net/).
+
+```bash
+# One-time install:
+brew install potrace
+python3 -m pip install --user Pillow
+
+# Per prebuilt:
+python3 tools/image-to-logo.py path/to/silhouette.png \
+    --name f1car \
+    --category scene \
+    --label "F1 Race Car" \
+    --icon 🏎️ \
+    --width 600 --height 320
+```
+
+The script will:
+1. Threshold the image to black/white (use `--invert` if the artwork is light on a dark background)
+2. Run potrace to vectorize the bitmap to SVG paths
+3. Parse paths and sample Bezier curves into line segments
+4. Map SVG coordinates to centered Logo coordinates
+5. Simplify the polylines (Ramer-Douglas-Peucker)
+6. Write `prebuilts/<category>/<name>.logo`
+7. Update `prebuilts/index.json`
+8. Regenerate `prebuilts/registry.js`
+
+Useful flags:
+- `--threshold 128` — black/white split point (0-255)
+- `--invert` — flip black/white before thresholding
+- `--blur 2` — denoise before thresholding
+- `--simplify 0.6` — RDP epsilon (higher = fewer points)
+- `--turdsize 5` — drop speckles smaller than N pixels
+- `--pen-width 2` — Logo `SETPENWIDTH` for the output
+- `--dump-svg out.svg` — also save the intermediate SVG for debugging
+
+### Option B — Write Logo code by hand
+
 1. Create a new `.logo` file under `prebuilts/<category>/<name>.logo`. Use the helpers in `prebuilts/_lib.logo` (`BOX`, `CIRCLE_AT`, `DISK`, `FBOX`, `CIRC_ARC`) — they're auto-loaded.
 2. Add a metadata entry to the matching category in `prebuilts/index.json`:
    ```json
