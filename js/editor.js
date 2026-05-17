@@ -394,6 +394,43 @@ const Editor = (() => {
     // Apply custom color classes
     cm.getWrapperElement().classList.add('cm-s-logo');
 
+    // ── Fast backspace ─────────────────────────────────────────────
+    // The browser's default key-repeat rate is too slow for editing
+    // long lines.  When the user holds Backspace, we kick off our own
+    // 25ms timer after a 250ms initial delay.
+    (function fastBackspace() {
+      let timer = null;
+      const cmEl = cm.getWrapperElement();
+
+      function startRepeat() {
+        if (timer) return;
+        // Initial 250ms delay before fast-repeat kicks in (so a brief
+        // tap still feels normal).
+        timer = setTimeout(function repeat() {
+          cm.execCommand('delCharBefore');
+          timer = setTimeout(repeat, 25); // ~40 deletions per second
+        }, 250);
+      }
+      function stopRepeat() {
+        if (timer) { clearTimeout(timer); timer = null; }
+      }
+
+      cmEl.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !e.metaKey && !e.ctrlKey && !e.altKey) {
+          // Don't interfere with the FIRST delete (CodeMirror handles it)
+          // — only start our repeater on the OS-generated repeat events.
+          if (e.repeat) {
+            e.preventDefault();
+            startRepeat();
+          }
+        }
+      });
+      cmEl.addEventListener('keyup', (e) => {
+        if (e.key === 'Backspace') stopRepeat();
+      });
+      cmEl.addEventListener('blur', stopRepeat, true);
+    })();
+
     // Trigger autocomplete on keystrokes
     cm.on('inputRead', (instance, change) => {
       if (change.text[0] === '\n') return;

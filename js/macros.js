@@ -36,6 +36,8 @@ const Macros = (() => {
     if (btn) btn.classList.add('selected');
     document.getElementById('macro-preview-code').textContent = macro.code;
     document.getElementById('macro-insert-btn').disabled = false;
+    const runBtn = document.getElementById('macro-insert-run-btn');
+    if (runBtn) runBtn.disabled = false;
   }
 
   function renderMacroGrid(catId) {
@@ -66,6 +68,14 @@ const Macros = (() => {
     Drawer.close();
   }
 
+  function insertAndRunSelected() {
+    if (!selectedMacro || !Editor.cm) return;
+    Editor.cm.setValue(selectedMacro.code);
+    Drawer.close();
+    // Run after the drawer close animation so the canvas is fully visible
+    setTimeout(() => App.runProgram(selectedMacro.code), 50);
+  }
+
   function init() {
     try {
       loadPrebuilts();
@@ -86,6 +96,7 @@ const Macros = (() => {
     });
 
     document.getElementById('macro-insert-btn').addEventListener('click', insertSelected);
+    document.getElementById('macro-insert-run-btn')?.addEventListener('click', insertAndRunSelected);
 
     renderMacroGrid(activeCat);
   }

@@ -632,13 +632,28 @@ body {
   max-height: 130px;
 }
 
-#macro-insert-btn {
-  background: var(--accent);
-  color: #fff;
-  align-self: stretch;
+.macro-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+.macro-buttons > .btn {
+  flex: 1;
   justify-content: center;
 }
-#macro-insert-btn:hover:not(:disabled) { background: #67e8f9; }
+
+#macro-insert-btn {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--accent);
+}
+#macro-insert-btn:hover:not(:disabled) { background: var(--bg); border-color: #67e8f9; }
+
+#macro-insert-run-btn {
+  background: var(--accent2);
+  color: #0d2a1c;
+}
+#macro-insert-run-btn:hover:not(:disabled) { background: #6ee9b0; }
 
 /* ─── Help panel ───────────────────────────────────────────────────── */
 #help-search-wrap {
