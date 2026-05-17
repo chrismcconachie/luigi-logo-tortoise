@@ -130,6 +130,12 @@
           "label": "Sun",
           "icon": "☀️",
           "file": "scene/sun.logo"
+        },
+        {
+          "id": "solar-system",
+          "label": "Solar System",
+          "icon": "🪐",
+          "file": "nature/solar-system.logo"
         }
       ]
     },
