@@ -2,7 +2,7 @@
 
 A browser-based Logo programming environment with a full interpreter, modern GUI, autocomplete, pre-built macros, and a draggable resizable layout. Runs entirely in the browser — just open `index.html`.
 
-Made by **Mars McConachie** & **Chris McConachie**.
+Made by **Mars & Chris McConachie**.
 
 ## Features
 

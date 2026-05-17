@@ -153,7 +153,7 @@ const App = (() => {
       </figure>
       <h2 class="print-section-heading">Code</h2>
       <pre class="print-code">${escapeHtml(code)}</pre>
-      <footer class="print-footer">Made with 🐢 by Mars McConachie &amp; Chris McConachie</footer>
+      <footer class="print-footer">Made with 🐢 by Mars &amp; Chris McConachie</footer>
     `;
     // Give the <img> a tick to decode the dataURL before opening the dialog.
     setTimeout(() => window.print(), 50);
