@@ -57,8 +57,7 @@
   --red:      #f38ba8;
   --yellow:   #f9e2af;
   --green:    #a6e3a1;
-  --toolbar-h: 56px;
-  --footer-h:  22px;
+  --toolbar-h: 80px;
   --drawer-w:  420px;
   --divider-w: 8px;
 }
@@ -83,10 +82,10 @@ body {
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 0 16px;
+  gap: 10px;
+  padding: 0 18px;
   flex-shrink: 0;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   overflow-x: auto;
 }
 
@@ -99,37 +98,53 @@ body {
   white-space: nowrap;
 }
 
+.toolbar-logo-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-right: 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  height: 68px;
+  border-radius: 8px;
+  transition: transform .15s, background .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.toolbar-logo-btn:hover { background: rgba(124,106,247,.15); transform: scale(1.04); }
+.toolbar-logo-btn:active { transform: scale(.97); }
+
 .toolbar-logo {
-  height: 42px;
+  height: 64px;
   width: auto;
   display: block;
-  margin-right: 10px;
   image-rendering: pixelated;
-  flex-shrink: 0;
   user-select: none;
   -webkit-user-drag: none;
+  filter: drop-shadow(0 0 8px rgba(120, 230, 120, .25));
 }
 
 .toolbar-divider {
   width: 1px;
-  height: 26px;
+  height: 36px;
   background: var(--border);
-  margin: 0 2px;
+  margin: 0 4px;
   flex-shrink: 0;
 }
 
 .btn {
-  padding: 7px 12px;
+  padding: 10px 14px;
   border: none;
-  border-radius: 6px;
+  border-radius: 7px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   transition: opacity .15s, transform .1s, background .15s;
   white-space: nowrap;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   flex-shrink: 0;
 }
 .btn:active { transform: scale(.96); }
@@ -336,16 +351,73 @@ body {
 .console-ok    { color: var(--green); }
 .console-dim   { color: var(--text-dim); }
 
-/* ─── Footer attribution ───────────────────────────────────────────── */
-#footer {
-  height: var(--footer-h);
-  font-size: 11px;
-  color: var(--text-dim);
+/* ─── About modal ──────────────────────────────────────────────────── */
+#about-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s;
+}
+#about-backdrop.open { opacity: 1; pointer-events: auto; }
+
+#about-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(.92);
+  background: #000;
+  border: 2px solid var(--accent);
+  border-radius: 14px;
+  padding: 28px 36px 24px;
+  z-index: 210;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s, transform .3s cubic-bezier(.2, .8, .2, 1);
   text-align: center;
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-  padding: 4px 8px;
-  user-select: none;
+  box-shadow: 0 24px 60px rgba(0,0,0,.6), 0 0 60px rgba(124,106,247,.3);
+  max-width: 92vw;
+}
+#about-modal.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+#about-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 22px;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+#about-close:hover { background: rgba(255,255,255,.08); color: var(--text); }
+
+#about-logo {
+  display: block;
+  margin: 0 auto 18px;
+  max-width: min(440px, 70vw);
+  max-height: 60vh;
+  width: auto;
+  height: auto;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 32px rgba(120, 230, 120, .3));
+}
+
+.about-attr {
+  font-family: 'Fira Code', monospace;
+  font-size: 13px;
+  color: var(--text-dim);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin: 0;
 }
 
 /* ─── Drawer (slides from LEFT, covers canvas) ────────────────────── */
@@ -364,7 +436,7 @@ body {
   position: fixed;
   top: var(--toolbar-h);
   left: 0;
-  bottom: var(--footer-h);
+  bottom: 0;
   width: var(--drawer-w);
   max-width: 92%;
   background: var(--surface);

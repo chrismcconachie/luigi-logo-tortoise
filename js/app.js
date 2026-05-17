@@ -214,6 +214,31 @@ const App = (() => {
     });
   }
 
+  // ── About modal ────────────────────────────────────────────────────
+  function initAbout() {
+    const btn = document.getElementById('btn-about');
+    const modal = document.getElementById('about-modal');
+    const backdrop = document.getElementById('about-backdrop');
+    const close = document.getElementById('about-close');
+    if (!btn || !modal || !backdrop) return;
+
+    function openAbout() {
+      modal.classList.add('open');
+      backdrop.classList.add('open');
+    }
+    function closeAbout() {
+      modal.classList.remove('open');
+      backdrop.classList.remove('open');
+    }
+
+    btn.addEventListener('click', openAbout);
+    backdrop.addEventListener('click', closeAbout);
+    close.addEventListener('click', closeAbout);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('open')) closeAbout();
+    });
+  }
+
   // ── Splash screen ──────────────────────────────────────────────────
   function initSplash() {
     const splash = document.getElementById('splash');
@@ -231,6 +256,7 @@ const App = (() => {
     outputEl = document.getElementById('console-output');
 
     initSplash();
+    initAbout();
     Turtle.init();
 
     document.getElementById('btn-run').addEventListener('click', () => {

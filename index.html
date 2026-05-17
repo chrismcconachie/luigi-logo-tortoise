@@ -31,7 +31,9 @@
 
 <!-- ─── Toolbar ──────────────────────────────────────────────────────── -->
 <div id="toolbar">
-  <img class="toolbar-logo" src="assets/luigi-logo-horiz.png" alt="Luigi Logo Tortoise">
+  <button class="toolbar-logo-btn" id="btn-about" title="About Luigi Logo Tortoise">
+    <img class="toolbar-logo" src="assets/luigi-tortoise.png" alt="Luigi Logo Tortoise">
+  </button>
 
   <button id="btn-run"   class="btn" title="Shift+Enter">▶ Run <span class="kbd">⇧↵</span></button>
   <button id="btn-stop"  class="btn" disabled>■ Stop</button>
@@ -72,9 +74,12 @@
   </div>
 </div>
 
-<!-- ─── Footer / attribution ─────────────────────────────────────────── -->
-<div id="footer">
-  Made with 🐢 by Mars McConachie &amp; Chris McConachie
+<!-- ─── About modal ──────────────────────────────────────────────────── -->
+<div id="about-backdrop"></div>
+<div id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-modal-title">
+  <button id="about-close" aria-label="Close">✕</button>
+  <img id="about-logo" src="assets/luigi-logo-square.png" alt="Luigi Logo Tortoise">
+  <p id="about-modal-title" class="about-attr">Made by Mars McConachie &amp; Chris McConachie</p>
 </div>
 
 <!-- ─── Drawer overlay ───────────────────────────────────────────────── -->
