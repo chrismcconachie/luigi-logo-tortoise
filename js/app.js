@@ -251,12 +251,51 @@ const App = (() => {
     setTimeout(dismiss, 2000);
   }
 
+  // ── iOS keyboard fix ───────────────────────────────────────────────
+  // When the on-screen keyboard appears on iPad/iPhone Safari it can
+  // scroll the page upward to bring the focused input into view. When
+  // the keyboard dismisses, Safari sometimes leaves the page stuck up.
+  // Force the scroll position back to (0,0) whenever focus leaves any
+  // input/textarea, and whenever the visual viewport returns to full size.
+  function initIOSKeyboardFix() {
+    function resetScroll() {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }
+
+    // Any input/textarea (including CodeMirror's hidden textarea) losing
+    // focus typically means the keyboard is dismissing.
+    document.addEventListener('focusout', () => {
+      // Let iOS finish the keyboard hide animation first
+      setTimeout(resetScroll, 100);
+      // And once more after the animation in case the first was too early
+      setTimeout(resetScroll, 350);
+    });
+
+    // visualViewport.resize fires when the keyboard shows / hides.
+    // When height matches innerHeight, the keyboard is gone.
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', () => {
+        if (Math.abs(window.visualViewport.height - window.innerHeight) < 4) {
+          resetScroll();
+        }
+      });
+    }
+
+    // Defensive: on any orientation change reset too.
+    window.addEventListener('orientationchange', () => {
+      setTimeout(resetScroll, 250);
+    });
+  }
+
   // ── Init ──────────────────────────────────────────────────────────
   function init() {
     outputEl = document.getElementById('console-output');
 
     initSplash();
     initAbout();
+    initIOSKeyboardFix();
     Turtle.init();
 
     document.getElementById('btn-run').addEventListener('click', () => {
