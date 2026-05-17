@@ -50,7 +50,7 @@
   --bg:       #1e1e2e;
   --surface:  #252535;
   --border:   #3a3a5c;
-  --accent:   #7c6af7;
+  --accent:   #22d3ee;
   --accent2:  #56d9a0;
   --text:     #cdd6f4;
   --text-dim: #7f849c;
@@ -112,7 +112,7 @@ body {
   transition: transform .15s, background .15s;
   -webkit-tap-highlight-color: transparent;
 }
-.toolbar-logo-btn:hover { background: rgba(124,106,247,.15); transform: scale(1.04); }
+.toolbar-logo-btn:hover { background: rgba(34,211,238,.15); transform: scale(1.04); }
 .toolbar-logo-btn:active { transform: scale(.97); }
 
 .toolbar-logo {
@@ -160,13 +160,11 @@ body {
   opacity: .85;
 }
 
-#btn-run   { background: var(--accent2); color: #1a2a22; }
-#btn-stop  { background: var(--red);    color: #2a1a1a; }
-#btn-clear { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
-#btn-clear-code { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+/* btn-run, btn-stop, btn-clear, btn-clear-code are now floating buttons,
+   styled by the .btn-floating + .btn-run / .btn-stop / .btn-clear-canvas
+   rules.  Only #btn-print remains in the toolbar. */
 #btn-print { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
-
-#btn-clear:hover, #btn-clear-code:hover, #btn-print:hover { background: #2e2e48; }
+#btn-print:hover { background: #2e2e48; }
 
 .btn-drawer {
   background: var(--surface);
@@ -220,6 +218,61 @@ body {
 }
 #canvas-turtle { z-index: 1; pointer-events: none; }
 
+/* ─── Floating action buttons (over canvas + over code editor) ───── */
+.floating-actions {
+  position: absolute;
+  z-index: 50;
+  display: flex;
+  gap: 8px;
+  pointer-events: none;  /* container is transparent to clicks; children re-enable */
+}
+.floating-actions > * { pointer-events: auto; }
+
+/* Top-right of the canvas pane */
+.floating-actions-canvas {
+  top: 12px;
+  right: 12px;
+}
+
+/* Bottom-right of the code editor (above the console) */
+.floating-actions-code {
+  top: 12px;
+  right: 12px;
+}
+
+.btn-floating {
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,.15);
+  box-shadow: 0 4px 12px rgba(0,0,0,.35), 0 1px 3px rgba(0,0,0,.25);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: transform .1s, box-shadow .15s, background .15s;
+}
+.btn-floating:hover {
+  box-shadow: 0 6px 18px rgba(0,0,0,.45), 0 2px 4px rgba(0,0,0,.3);
+}
+.btn-floating:active { transform: scale(.96); }
+.btn-floating:disabled { box-shadow: 0 2px 6px rgba(0,0,0,.2); opacity: .5; }
+
+/* Run = vibrant green */
+.btn-run { background: var(--accent2); color: #0d2a1c; }
+.btn-run:not(:disabled):hover { background: #6ee9b0; }
+
+/* Stop = red */
+.btn-stop { background: var(--red); color: #2a0a14; }
+.btn-stop:not(:disabled):hover { background: #ff9eb5; }
+
+/* Clear canvas — semi-transparent dark over the white canvas */
+.btn-clear-canvas {
+  background: rgba(35, 35, 53, .9);
+  color: var(--text);
+  border-color: rgba(255,255,255,.1);
+}
+.btn-clear-canvas:hover { background: rgba(45, 45, 70, .95); }
+
 /* ─── Resize divider ──────────────────────────────────────────────── */
 #resize-divider {
   width: var(--divider-w);
@@ -264,6 +317,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 0;
+  padding-top: 60px; /* clear space for the floating Run/Stop/Clear buttons */
 }
 
 #editor-wrap .CodeMirror {
@@ -291,7 +345,7 @@ body {
 }
 
 /* Logo syntax colors */
-.cm-s-logo .cm-keyword  { color: #bd93f9; font-weight: 600; }
+.cm-s-logo .cm-keyword  { color: #67e8f9; font-weight: 600; }
 .cm-s-logo .cm-def      { color: #f1fa8c; font-weight: 700; }
 .cm-s-logo .cm-variable { color: #cdd6f4; }
 .cm-s-logo .cm-variable-2 { color: #8be9fd; }
@@ -377,7 +431,7 @@ body {
   pointer-events: none;
   transition: opacity .25s, transform .3s cubic-bezier(.2, .8, .2, 1);
   text-align: center;
-  box-shadow: 0 24px 60px rgba(0,0,0,.6), 0 0 60px rgba(124,106,247,.3);
+  box-shadow: 0 24px 60px rgba(0,0,0,.6), 0 0 60px rgba(34,211,238,.3);
   max-width: 92vw;
 }
 #about-modal.open {
@@ -584,7 +638,7 @@ body {
   align-self: stretch;
   justify-content: center;
 }
-#macro-insert-btn:hover:not(:disabled) { background: #8b7afa; }
+#macro-insert-btn:hover:not(:disabled) { background: #67e8f9; }
 
 /* ─── Help panel ───────────────────────────────────────────────────── */
 #help-search-wrap {
@@ -630,14 +684,14 @@ body {
   transition: background .1s;
   -webkit-tap-highlight-color: transparent;
 }
-.help-cmd-row:hover { background: rgba(124,106,247,.12); }
-.help-cmd-row.active { background: rgba(124,106,247,.2); }
+.help-cmd-row:hover { background: rgba(34,211,238,.12); }
+.help-cmd-row.active { background: rgba(34,211,238,.2); }
 
 .help-cmd-name {
   font-family: 'Fira Code', monospace;
   font-size: 13px;
   font-weight: 600;
-  color: #bd93f9;
+  color: #67e8f9;
   flex-shrink: 0;
 }
 .help-cmd-aliases { font-size: 11px; color: var(--text-dim); }
@@ -716,10 +770,10 @@ body {
   color: var(--text) !important;
 }
 .CodeMirror-hint-active {
-  background: rgba(124,106,247,.3) !important;
+  background: rgba(34,211,238,.3) !important;
   color: #fff !important;
 }
-.logo-hint-name { color: #bd93f9; font-weight: 600; min-width: 160px; }
+.logo-hint-name { color: #67e8f9; font-weight: 600; min-width: 160px; }
 .logo-hint-desc { color: var(--text-dim); font-size: 11px; }
 
 /* ─── Scrollbars ───────────────────────────────────────────────────── */
@@ -734,54 +788,85 @@ body {
 }
 
 @media print {
-  body * { visibility: hidden !important; }
-  #print-area, #print-area * { visibility: visible !important; }
+  /* Hide the entire app and only show the print container */
+  html, body { background: #fff !important; height: auto !important; overflow: visible !important; }
+  body > * { display: none !important; }
   #print-area {
     display: block !important;
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    width: 100%;
+    position: static !important;
+    width: 100% !important;
+    color: #000 !important;
+    background: #fff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-family: 'Segoe UI', system-ui, sans-serif !important;
+  }
+  #print-area * { visibility: visible !important; box-sizing: border-box; }
+
+  .print-header {
+    text-align: center;
+    border-bottom: 2px solid #000;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+  .print-header h1 {
+    font-size: 22px;
+    margin: 0 0 4px 0;
     color: #000;
+  }
+  .print-stamp {
+    font-size: 11px;
+    color: #555;
+    margin: 0;
+  }
+
+  .print-figure {
+    margin: 0 0 18px 0;
+    padding: 0;
+    page-break-inside: avoid;
+    text-align: center;
+  }
+  .print-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    border: 1px solid #999;
     background: #fff;
-    padding: 20px;
-    font-family: 'Segoe UI', system-ui, sans-serif;
   }
-  #print-area h1 {
-    font-size: 20px;
-    margin-bottom: 8px;
-  }
-  #print-area h2 {
+
+  .print-section-heading {
     font-size: 14px;
-    margin: 18px 0 6px;
+    margin: 0 0 8px 0;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #ccc;
     page-break-after: avoid;
   }
-  #print-area .print-image {
-    width: 100%;
-    max-width: 760px;
-    display: block;
-    margin: 0 auto;
-    border: 1px solid #ccc;
-    page-break-inside: avoid;
-  }
-  #print-area .print-code {
+
+  .print-code {
     font-family: 'Courier New', monospace;
-    font-size: 11px;
-    line-height: 1.5;
+    font-size: 10.5px;
+    line-height: 1.45;
     white-space: pre-wrap;
-    word-break: break-all;
+    word-break: break-word;
     color: #000;
-    background: #f8f8f8;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    background: #f6f6f6;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin: 0;
   }
-  #print-area .print-footer {
-    margin-top: 20px;
+
+  .print-footer {
+    margin-top: 18px;
+    padding-top: 8px;
+    border-top: 1px solid #ccc;
     font-size: 10px;
     color: #666;
     text-align: center;
     page-break-before: avoid;
   }
+
   @page { margin: 0.5in; }
 }
 

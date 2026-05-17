@@ -186,12 +186,6 @@
           "file": "scene/car.logo"
         },
         {
-          "id": "f1car",
-          "label": "F1 Race Car",
-          "icon": "🏎️",
-          "file": "scene/f1car.logo"
-        },
-        {
           "id": "stickfigure",
           "label": "Stick Figure",
           "icon": "🧍",
@@ -208,6 +202,18 @@
           "label": "Flower",
           "icon": "🌷",
           "file": "scene/flower.logo"
+        },
+        {
+          "id": "mclaren-f1",
+          "label": "F1 Race Car (traced)",
+          "icon": "🏁",
+          "file": "scene/mclaren-f1.logo"
+        },
+        {
+          "id": "tuatara",
+          "label": "Tuatara",
+          "icon": "🦎",
+          "file": "scene/tuatara.logo"
         }
       ]
     },
