@@ -223,27 +223,46 @@ def parse_path_d(d: str, curve_samples: int = 12):
 
 
 def extract_paths_and_viewbox(svg: str):
-    """Pull each <path d='...'/> out of the SVG and the overall viewBox."""
+    """Pull each <path d='...'/> out of the SVG, the overall viewBox, and the
+    transform on the <g> wrapper (potrace's `translate(...) scale(...)`)."""
     path_d = re.findall(r'<path[^>]*d="([^"]*)"', svg)
     vb_match = re.search(r'viewBox="([^"]*)"', svg)
     if vb_match:
         vbx, vby, vbw, vbh = (float(n) for n in vb_match.group(1).split())
     else:
-        # potrace also emits width/height + transform.  Compute later from points.
         vbx = vby = 0.0
         vbw = vbh = 1000.0
-    return path_d, (vbx, vby, vbw, vbh)
+
+    # potrace emits e.g. transform="translate(0,1103) scale(0.1,-0.1)"
+    # on the <g> wrapper.  We need the scale so we can map raw path
+    # coordinates back to source-image pixel coordinates.
+    g_transform = (0.0, 0.0, 1.0, 1.0)  # tx, ty, sx, sy defaults
+    g_match = re.search(r'<g[^>]*transform="([^"]*)"', svg)
+    if g_match:
+        ts = g_match.group(1)
+        tr = re.search(r'translate\(\s*([\-\d.]+)[\s,]+([\-\d.]+)', ts)
+        sc = re.search(r'scale\(\s*([\-\d.]+)[\s,]+([\-\d.]+)', ts)
+        if tr: g_transform = (float(tr.group(1)), float(tr.group(2)),
+                              g_transform[2], g_transform[3])
+        if sc: g_transform = (g_transform[0], g_transform[1],
+                              float(sc.group(1)), float(sc.group(2)))
+
+    return path_d, (vbx, vby, vbw, vbh), g_transform
 
 
 # ── Coordinate mapping ──────────────────────────────────────────────
 
 def map_to_logo(polylines, viewbox, target_w, target_h):
-    """SVG (top-left, Y down) → Logo (center, Y up), uniformly scaled to fit."""
-    # Compute the actual bounding box of the polyline points (more reliable than viewBox)
+    """SVG (top-left, Y down) → Logo (center, Y up), uniformly scaled to fit.
+
+    Returns (out_polylines, transform).  `transform` is a tuple
+    (svg_cx, svg_cy, scale) that lets callers map Logo coords BACK to
+    SVG coords later (needed for color sampling).
+    """
     xs = [x for poly in polylines for (x, _) in poly]
     ys = [y for poly in polylines for (_, y) in poly]
     if not xs:
-        return []
+        return [], (0, 0, 1)
     minx, maxx = min(xs), max(xs)
     miny, maxy = min(ys), max(ys)
     bw = max(maxx - minx, 1e-6)
@@ -253,13 +272,73 @@ def map_to_logo(polylines, viewbox, target_w, target_h):
 
     scale = min(target_w / bw, target_h / bh)
 
-    # potrace's SVG output applies a `scale(1,-1)` transform on the path group,
-    # which means the raw path coordinates are already in math-standard (Y-up)
-    # orientation.  Logo is also Y-up, so we do NOT flip Y here.
     out = []
     for poly in polylines:
         out.append([((x - cx) * scale, (y - cy) * scale) for (x, y) in poly])
-    return out
+    return out, (cx, cy, scale)
+
+
+def logo_to_svg(lx, ly, transform):
+    """Inverse of map_to_logo for a single point."""
+    cx, cy, scale = transform
+    return (lx / scale + cx, ly / scale + cy)
+
+
+def sample_circle_color(source_img_rgb, lx, ly, r, transform, g_transform):
+    """Sample the dominant fill color of a detected circle from the source image.
+
+    Samples many points inside the circle radius and returns the most-
+    saturated non-white pixel found.  This is more robust than averaging
+    when the circle center happens to land on an outline or highlight.
+    """
+    svg_x, svg_y = logo_to_svg(lx, ly, transform)
+
+    tx, ty, sx, sy = g_transform
+    pixel_x = tx + sx * svg_x
+    pixel_y = ty + sy * svg_y
+
+    sw, sh = source_img_rgb.size
+    cx_px = int(round(pixel_x))
+    cy_px = int(round(pixel_y))
+
+    # `r` is in Logo units; convert back to pixels via the map_to_logo scale
+    # (the inverse of scale).  Since sx is potrace's scale (pixel-per-path-unit),
+    # and transform[2] is path-units-per-logo-unit, the combined pixel-per-logo
+    # ratio is sx / transform[2].  But since circles are usually visibly small,
+    # just clamp to a sane sampling radius based on r in logo units.
+    px_per_logo = abs(sx) / transform[2]
+    radius_px = max(3, int(r * px_per_logo * 0.7))
+
+    best = None
+    best_sat = -1
+    # Spiral sampling: rings at 0%, 30%, 60% of radius × 8 angles
+    import math
+    candidates = [(0, 0)]
+    for ring_frac in (0.3, 0.5, 0.7):
+        for k in range(12):
+            theta = (k / 12) * 2 * math.pi
+            candidates.append((
+                ring_frac * radius_px * math.cos(theta),
+                ring_frac * radius_px * math.sin(theta),
+            ))
+
+    for (dx, dy) in candidates:
+        x = max(0, min(sw - 1, cx_px + int(dx)))
+        y = max(0, min(sh - 1, cy_px + int(dy)))
+        p = source_img_rgb.getpixel((x, y))
+        # Saturation proxy: range of RGB channels.  White/black/gray ≈ 0.
+        sat = max(p) - min(p)
+        # Brightness — skip near-white pixels which are background
+        bright = (p[0] + p[1] + p[2]) / 3
+        if bright > 240:
+            continue
+        if sat > best_sat:
+            best_sat = sat
+            best = p
+
+    if best is None:
+        return (128, 128, 128)
+    return (best[0], best[1], best[2])
 
 
 # ── Polyline simplification ─────────────────────────────────────────
@@ -329,7 +408,8 @@ def detect_circle(points, tol_radius=0.25, tol_aspect=1.22, min_points=10):
 
 # ── Logo code emission ─────────────────────────────────────────────
 
-def emit_logo(polylines, proc_name, pen_width=2, simplify_epsilon=0.6, detect_circles=True):
+def emit_logo(polylines, proc_name, pen_width=2, simplify_epsilon=0.6,
+              detect_circles=True, color_sampler=None):
     lines = [
         f'; Auto-traced by tools/image-to-logo.py — edit at your own risk.',
         f'',
@@ -354,6 +434,22 @@ def emit_logo(polylines, proc_name, pen_width=2, simplify_epsilon=0.6, detect_ci
                 drawn_paths += 1
                 circles_detected += 1
                 lines.append(f'  ; path {drawn_paths} — circle')
+                # Optional: sample color at the circle's center and emit a
+                # filled disk.  Skipped if the sampled color is white-ish
+                # (probably background).
+                if color_sampler is not None:
+                    color = color_sampler(cx, cy, r)
+                    # The sampler returns (128,128,128) when it can't find
+                    # any colored pixel; treat that as "skip color".
+                    is_gray_fallback = (color == (128, 128, 128))
+                    if not is_gray_fallback:
+                        lines.append(f'  SETPC [{color[0]} {color[1]} {color[2]}]')
+                        lines.append(f'  CIRCLE_AT {cx:.1f} {cy:.1f} {r:.1f}')
+                        lines.append(f'  PU SETXY {cx:.1f} {cy:.1f} PD')
+                        lines.append(f'  FILL')
+                        lines.append(f'  SETPC 0')
+                        lines.append('')
+                        continue
                 lines.append(f'  CIRCLE_AT {cx:.1f} {cy:.1f} {r:.1f}')
                 lines.append('')
                 continue
@@ -418,6 +514,8 @@ def main():
     ap.add_argument('--pen-width', type=int, default=2, help='Logo pen width (default: 2)')
     ap.add_argument('--no-detect-circles', action='store_true',
                     help='Disable auto-replacement of circular paths with CIRCLE_AT calls')
+    ap.add_argument('--colors', action='store_true',
+                    help='Sample source-image colors at each detected circle and emit filled colored disks (skips white-ish/background colors)')
 
     ap.add_argument('--out-dir', default=str(ROOT / 'prebuilts'), help='Prebuilts root')
     ap.add_argument('--no-manifest', action='store_true', help='Skip updating index.json')
@@ -445,14 +543,22 @@ def main():
         print(f'      (intermediate SVG → {args.dump_svg})')
 
     print(f'[3/5] Parsing SVG paths ...')
-    path_d_list, viewbox = extract_paths_and_viewbox(svg)
+    path_d_list, viewbox, g_transform = extract_paths_and_viewbox(svg)
     polylines = []
     for d in path_d_list:
         polylines.extend(parse_path_d(d, curve_samples=args.curve_samples))
     print(f'      → {len(polylines)} paths')
 
     print(f'[4/5] Mapping to Logo coords ({args.width} x {args.height}) ...')
-    logo_polys = map_to_logo(polylines, viewbox, args.width, args.height)
+    logo_polys, transform = map_to_logo(polylines, viewbox, args.width, args.height)
+
+    # Optional: build a color sampler that reads the source image so detected
+    # circles are emitted as filled disks in their original colors.
+    color_sampler = None
+    if args.colors:
+        source_rgb = Image.open(args.image).convert('RGB')
+        def color_sampler(lx, ly, r):
+            return sample_circle_color(source_rgb, lx, ly, r, transform, g_transform)
 
     print(f'[5/5] Emitting Logo code ...')
     code, path_count, point_count, circle_count = emit_logo(
@@ -460,6 +566,7 @@ def main():
         pen_width=args.pen_width,
         simplify_epsilon=args.simplify,
         detect_circles=not args.no_detect_circles,
+        color_sampler=color_sampler,
     )
     print(f'      → {path_count} paths kept '
           f'({circle_count} replaced with CIRCLE_AT), '
