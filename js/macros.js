@@ -72,6 +72,8 @@ const Macros = (() => {
     if (!selectedMacro || !Editor.cm) return;
     Editor.cm.setValue(selectedMacro.code);
     Drawer.close();
+    // On mobile, jump to canvas view so the drawing is visible
+    if (App.maybeSwitchToCanvasOnRun) App.maybeSwitchToCanvasOnRun();
     // Run after the drawer close animation so the canvas is fully visible
     setTimeout(() => App.runProgram(selectedMacro.code), 50);
   }

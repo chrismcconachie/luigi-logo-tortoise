@@ -885,6 +885,59 @@ body {
   @page { margin: 0.5in; }
 }
 
+/* ─── Mobile (iPhone-ish narrow viewport) ─────────────────────────── */
+/* By default the mobile-only toggle button is hidden on every viewport. */
+.mobile-only { display: none !important; }
+
+@media (max-width: 768px) {
+  /* Hide the resize divider and stack the two panes so only one is
+     visible at a time.  Toggle by adding `mobile-show-code` to <body>. */
+  #resize-divider { display: none; }
+
+  #main { position: relative; }
+
+  /* Both panes occupy the same area; we just toggle opacity so the
+     CANVAS keeps its pixel buffer (drawings survive view-switches). */
+  #canvas-pane,
+  #code-pane {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100%;
+    transition: opacity .2s ease;
+  }
+  #canvas-pane { z-index: 2; opacity: 1; }
+  #code-pane   { z-index: 1; opacity: 0; pointer-events: none; }
+
+  body.mobile-show-code #canvas-pane { opacity: 0; pointer-events: none; z-index: 1; }
+  body.mobile-show-code #code-pane   { opacity: 1; pointer-events: auto; z-index: 2; }
+
+  /* Show the mobile toggle in the toolbar */
+  .mobile-only { display: inline-flex !important; }
+
+  /* Strip text labels from toolbar buttons — keep just the emoji to save space */
+  .btn-label { display: none; }
+  .btn { padding: 8px 10px; gap: 4px; }
+
+  /* Trim the splash logo and About modal to fit small screens */
+  #splash-logo, #about-logo { max-width: 80vw; max-height: 50vh; }
+
+  /* Toolbar slim-down */
+  #toolbar { padding: 0 10px; gap: 6px; height: 64px; }
+  .toolbar-logo { height: 48px; }
+  .toolbar-logo-btn { height: 52px; }
+  .speed-wrap { font-size: 12px; }
+  #speed-slider { width: 80px; }
+
+  /* Make the floating action buttons smaller too */
+  .btn-floating { padding: 7px 10px; font-size: 12px; gap: 4px; }
+  .floating-actions-canvas { top: 8px; right: 8px; }
+  .floating-actions-code   { top: 8px; right: 8px; }
+
+  /* Drawer takes up most of the screen */
+  #drawer { width: 92%; }
+}
+
 /* ─── iPad / touch sizing ──────────────────────────────────────────── */
 @media (pointer: coarse) {
   .btn { padding: 9px 14px; font-size: 14px; }

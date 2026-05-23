@@ -212,7 +212,10 @@ const App = (() => {
       if (e.key === 'Enter' && e.shiftKey && !e.ctrlKey && !e.metaKey) {
         e.preventDefault();
         const src = Editor.cm ? Editor.cm.getValue() : '';
-        if (src.trim()) runProgram(src);
+        if (src.trim()) {
+          maybeSwitchToCanvasOnRun();
+          runProgram(src);
+        }
         return;
       }
       // Shift+C → Clear canvas
@@ -253,6 +256,44 @@ const App = (() => {
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && modal.classList.contains('open')) closeAbout();
     });
+  }
+
+  // ── Mobile view toggle ─────────────────────────────────────────────
+  // On narrow viewports (iPhone-ish) only one pane is visible at a time.
+  // The toggle button switches between canvas and code.
+  function initMobileToggle() {
+    const btn = document.getElementById('btn-view-toggle');
+    if (!btn) return;
+
+    function refresh() {
+      const showingCode = document.body.classList.contains('mobile-show-code');
+      btn.innerHTML = showingCode
+        ? '🖼 <span class="btn-label">Canvas</span>'
+        : '📝 <span class="btn-label">Code</span>';
+      // Trigger a canvas resync so the canvas matches its new layout size
+      // when transitioning into the visible state.
+      if (Turtle.syncCanvasSize) setTimeout(Turtle.syncCanvasSize, 220);
+    }
+
+    btn.addEventListener('click', () => {
+      document.body.classList.toggle('mobile-show-code');
+      refresh();
+    });
+
+    refresh();
+  }
+
+  // Auto-switch to canvas view when Run is pressed on mobile so the user
+  // sees the drawing happen.
+  function maybeSwitchToCanvasOnRun() {
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      document.body.classList.remove('mobile-show-code');
+      const btn = document.getElementById('btn-view-toggle');
+      // Re-running the toggle's refresh keeps the button label in sync
+      if (btn) btn.innerHTML = '📝 <span class="btn-label">Code</span>';
+      // ^ default (canvas visible) icon
+      if (Turtle.syncCanvasSize) setTimeout(Turtle.syncCanvasSize, 220);
+    }
   }
 
   // ── Splash screen ──────────────────────────────────────────────────
@@ -312,11 +353,15 @@ const App = (() => {
     initSplash();
     initAbout();
     initIOSKeyboardFix();
+    initMobileToggle();
     Turtle.init();
 
     document.getElementById('btn-run').addEventListener('click', () => {
       const src = Editor.cm ? Editor.cm.getValue() : '';
-      if (src.trim()) runProgram(src);
+      if (src.trim()) {
+        maybeSwitchToCanvasOnRun();
+        runProgram(src);
+      }
     });
 
     document.getElementById('btn-stop').addEventListener('click', stopProgram);
@@ -343,7 +388,7 @@ const App = (() => {
     printDim('Ready. Press ▶ Run or Shift+Enter to execute. 🐢');
   }
 
-  return { init, print, printInline, printError, clearConsole, runProgram };
+  return { init, print, printInline, printError, clearConsole, runProgram, maybeSwitchToCanvasOnRun };
 })();
 
 window.addEventListener('DOMContentLoaded', () => App.init());
